@@ -49,15 +49,12 @@ public class ReportIllegalParkingPage extends Template {
     }
 
     private void submitReport() {
-        String licensePlate = licensePlateInput.getText()
-                .toString().trim().toUpperCase();
+        String licensePlate = licensePlateInput.getText().toString().trim().toUpperCase();
 
-        String parkingSpot = parkingSpotInput.getText()
-                .toString().trim().toUpperCase();
+        String parkingSpot = parkingSpotInput.getText().toString().trim().toUpperCase();
 
         if (licensePlate.isEmpty() || parkingSpot.isEmpty()) {
-            reportResult.setText(
-                    "Please enter a license plate and parking spot.");
+            reportResult.setText("Please enter a license plate and parking spot.");
             reportResult.setVisibility(View.VISIBLE);
             return;
         }
@@ -114,8 +111,7 @@ public class ReportIllegalParkingPage extends Template {
                 android.util.Log.e("ReportIllegalParking", "Report submission failed", e);
 
                 runOnUiThread(() -> {
-                    reportResult.setText(
-                            "Could not submit report: " + e.getMessage());
+                    reportResult.setText("Could not submit report: " + e.getMessage());
                     submitReportBtn.setEnabled(true);
                 });
 

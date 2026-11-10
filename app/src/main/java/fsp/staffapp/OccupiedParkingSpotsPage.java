@@ -1,4 +1,3 @@
-
 package fsp.staffapp;
 
 import android.content.Intent;
@@ -45,15 +44,9 @@ public class OccupiedParkingSpotsPage extends Template {
         searchBtn.setOnClickListener(view -> searchParkingSpot());
 
         reportBtn.setOnClickListener(view -> {
-            String parkingSpot = spotInput.getText()
-                    .toString()
-                    .trim()
-                    .toUpperCase();
+            String parkingSpot = spotInput.getText().toString().trim().toUpperCase();
 
-            Intent intent = new Intent(
-                    OccupiedParkingSpotsPage.this,
-                    ReportIllegalParkingPage.class
-            );
+            Intent intent = new Intent(OccupiedParkingSpotsPage.this, ReportIllegalParkingPage.class);
 
             intent.putExtra("parkingSpot", parkingSpot);
             startActivity(intent);
@@ -61,10 +54,7 @@ public class OccupiedParkingSpotsPage extends Template {
     }
 
     private void searchParkingSpot() {
-        String parkingSpot = spotInput.getText()
-                .toString()
-                .trim()
-                .toUpperCase();
+        String parkingSpot = spotInput.getText().toString().trim().toUpperCase();
 
         if (parkingSpot.isEmpty()) {
             result.setText(R.string.enter_parking_spot);
@@ -82,10 +72,7 @@ public class OccupiedParkingSpotsPage extends Template {
             HttpURLConnection connection = null;
 
             try {
-                URL url = new URL(
-                        "http://localhost:9090/api/parking-spots/"
-                                + Uri.encode(parkingSpot)
-                );
+                URL url = new URL("http://localhost:9090/api/parking-spots/" + Uri.encode(parkingSpot));
 
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
@@ -135,11 +122,7 @@ public class OccupiedParkingSpotsPage extends Template {
                 });
 
             } catch (IOException e) {
-                android.util.Log.e(
-                        "OccupiedParkingSpots",
-                        "Parking spot lookup failed",
-                        e
-                );
+                android.util.Log.e("OccupiedParkingSpots", "Parking spot lookup failed", e);
 
                 String errorMessage = "Could not retrieve parking spot.";
 
