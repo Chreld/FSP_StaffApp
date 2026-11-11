@@ -1,3 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">FSP_StaffAPp</string>
+    <!-- Login page -->
+    <string name="app_name">FSP StaffApp</string>
+    <string name="login_error">Invalid username or password.</string>
+    <string name="login_subtitle">Parking Management</string>
+    <string name="username_hint">Staff username</string>
+    <string name="password_hint">Password</string>
+    <string name="login_btn">Log in</string>
+
+    <!-- Main menu page -->
+    <string name="menu_title">Staff Menu</string>
+    <string name="menu_subtitle">What would you like to do?</string>
+
+    <!-- Parking spots page -->
+    <string name="occupied_spots_title">Used Parking Spots</string>
+    <string name="scan_license_plate">Occupied parking spots will appear here.</string>
+    <string name="parking_spot_hint">Enter parking spot number</string>
+    <string name="check_parking_spot">Check Parking Spot</string>
+    <string name="report_illegal_parking">Report Wrong Parking</string>
+    <string name="enter_parking_spot">Enter a parking spot number.</string>
+    <string name="expected_license_plate">Expected license plate: %1$s</string>
+    <string name="no_car_expected">No car should be parked here.</string>
+    <string name="parking_spot_not_found">Parking spot not found.</string>
+
+    <!-- Report illegal parking page -->
+    <string name="report_illegal_parking_title">Report Illegal Parking</string>
+    <string name="report_placeholder_btn">The illegal parking report form will go here.</string>
 </resources>

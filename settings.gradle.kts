@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "FSP_StaffAPp"
+rootProject.name = "FSP_StaffApp"
 include(":app")
