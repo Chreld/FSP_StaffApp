@@ -1,28 +1,16 @@
 package fsp.staffapp;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import fsp.staffapp.network.ApiClient;
 import fsp.staffapp.template.Template;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 public class OccupiedParkingSpotsPage extends Template {
-
-    private final ExecutorService executor =
-            Executors.newSingleThreadExecutor();
 
     private EditText spotInput;
     private Button searchBtn;
@@ -44,6 +32,7 @@ public class OccupiedParkingSpotsPage extends Template {
         searchBtn.setOnClickListener(view -> searchParkingSpot());
 
         reportBtn.setOnClickListener(view -> {
+
             String parkingSpot = spotInput.getText().toString().trim().toUpperCase();
 
             Intent intent = new Intent(OccupiedParkingSpotsPage.this, ReportIllegalParkingPage.class);
@@ -54,6 +43,7 @@ public class OccupiedParkingSpotsPage extends Template {
     }
 
     private void searchParkingSpot() {
+
         String parkingSpot = spotInput.getText().toString().trim().toUpperCase();
 
         if (parkingSpot.isEmpty()) {
@@ -68,88 +58,42 @@ public class OccupiedParkingSpotsPage extends Template {
         reportBtn.setVisibility(View.GONE);
         searchBtn.setEnabled(false);
 
-        executor.execute(() -> {
-            HttpURLConnection connection = null;
+        // Ask ApiClient to retrieve the expected license plate
+        ApiClient.getLicensePlate(parkingSpot, new ApiClient.ApiCallback() {
 
-            try {
-                URL url = new URL("http://localhost:9090/api/parking-spots/" + Uri.encode(parkingSpot));
+            @Override
+            public void onSuccess(String response) {
 
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setConnectTimeout(5000);
-                connection.setReadTimeout(5000);
+                String licensePlate = response.trim();
 
-                int status = connection.getResponseCode();
+                if (licensePlate.isEmpty() || licensePlate.equalsIgnoreCase("null")) {
 
-                if (status != HttpURLConnection.HTTP_OK) {
-                    throw new IOException("HTTP " + status);
-                }
+                    result.setText(R.string.no_car_expected);
+                    reportBtn.setVisibility(View.VISIBLE);
 
-                StringBuilder response = new StringBuilder();
+                } else {
 
-                try (BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(
-                                connection.getInputStream(),
-                                StandardCharsets.UTF_8
-                        ))) {
+                    result.setText(getString(
+                            R.string.expected_license_plate,
+                            licensePlate
+                    ));
 
-                    String line;
-
-                    while ((line = reader.readLine()) != null) {
-                        response.append(line);
-                    }
-                }
-
-                String licensePlate = response.toString().trim();
-
-                runOnUiThread(() -> {
-                    if (licensePlate.isEmpty()
-                            || licensePlate.equalsIgnoreCase("null")) {
-
-                        result.setText(R.string.no_car_expected);
-                        reportBtn.setVisibility(View.VISIBLE);
-
-                    } else {
-                        result.setText(getString(
-                                R.string.expected_license_plate,
-                                licensePlate
-                        ));
-
-                        reportBtn.setVisibility(View.GONE);
-                    }
-
-                    searchBtn.setEnabled(true);
-                });
-
-            } catch (IOException e) {
-                android.util.Log.e("OccupiedParkingSpots", "Parking spot lookup failed", e);
-
-                String errorMessage = "Could not retrieve parking spot.";
-
-                if (e.getMessage() != null) {
-                    errorMessage += "\n" + e.getMessage();
-                }
-
-                String finalErrorMessage = errorMessage;
-
-                runOnUiThread(() -> {
-                    result.setText(finalErrorMessage);
-                    result.setVisibility(View.VISIBLE);
                     reportBtn.setVisibility(View.GONE);
-                    searchBtn.setEnabled(true);
-                });
-
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
                 }
+
+                searchBtn.setEnabled(true);
+            }
+
+            @Override
+            public void onError(String error) {
+
+                result.setText("Could not retrieve parking spot.\n" + error
+                );
+
+                result.setVisibility(View.VISIBLE);
+                reportBtn.setVisibility(View.GONE);
+                searchBtn.setEnabled(true);
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        executor.shutdownNow();
-        super.onDestroy();
     }
 }
