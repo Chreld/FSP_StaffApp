@@ -23,7 +23,7 @@ public class LoginPage extends AppCompatActivity {
             String username = usernameInput.getText().toString().trim();
             String password = passwordInput.getText().toString();
 
-            // Temp data to test login.
+            //TODO: Temp data to test login.
             if (username.equals("staff") && password.equals("1234")) {
                 Intent intent = new Intent(LoginPage.this, MainMenuPage.class);
                 startActivity(intent);
