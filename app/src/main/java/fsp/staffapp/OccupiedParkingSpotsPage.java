@@ -33,8 +33,7 @@ public class OccupiedParkingSpotsPage extends Template {
 
         reportBtn.setOnClickListener(view -> {
 
-            String parkingSpot = spotInput.getText()
-                    .toString().trim().toUpperCase();
+            String parkingSpot = spotInput.getText().toString().trim().toUpperCase();
 
             Intent intent = new Intent(OccupiedParkingSpotsPage.this, ReportIllegalParkingPage.class);
 
